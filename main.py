@@ -69,12 +69,10 @@ class mySensor(EV3Brick):
         self._mode('ANALOG')
         return self._value(0)
 
-left_wheel = Motor(Port.A)
-right_wheel = Motor(Port.D)
-wheelDiam =  56
-wheelSpacing = 200
 
-car = DriveBase(left_wheel, right_wheel, wheelDiam, wheelSpacing)
+# # Setup Motors
+car_wheel = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+baby_car = Motor(Port.A)
 
 # # Setup Sensors
 # sens1 = LegoPort(address = 'ev3-ports:in4')
@@ -92,15 +90,22 @@ ev3.speaker.beep()
 
 
 while True:
-    #read in joystick controls
-    joy_x_in = float(Get_SL('angleX')) #left right [-90,90]
-    joy_y_in = float(Get_SL('angleY')) #forward back [-100,100]
-
+    # ......read in joystick controls
+    joy_x_in = -100#float(Get_SL('angleX')) #left right [-90,90]
+    joy_y_in = 0#float(Get_SL('angleY')) #forward back [-100,100]
+    
+    #.......print out joystick controls
     print('x:'+str(joy_x_in))
     print('y:'+str(joy_y_in))
 
-    Put_SL('angleX','STRING','10')
+    #.....drive car
+    car_wheel.run(joy_y_in)
+    baby_car.run(joy_x_in)
 
-    #drive car
-    car.drive(joy_y_in,joy_x_in)
+    #.....read sensor
+    #.....send sensor data
+
+
+
+    
     
