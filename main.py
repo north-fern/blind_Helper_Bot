@@ -63,23 +63,24 @@ def Create_SL(Tag, Type):
 MOTOR/SENSOR SET-UP
 '''
 
-class mySensor(EV3Brick):
-    _ev3dev_driver_name = "ev3-analog-01"
-    def readvalue(self):
-        self._mode('ANALOG')
-        return self._value(0)
-
-
 # # Setup Motors
-car_wheel = Motor(Port.D, Direction.COUNTERCLOCKWISE)
+big_car = Motor(Port.D, Direction.COUNTERCLOCKWISE)
 baby_car = Motor(Port.A)
 
 # # Setup Sensors
-# sens1 = LegoPort(address = 'ev3-ports:in4')
-# sens1.mode = 'ev3-analog'
-# utime.sleep(0.5)
-# sensor_left = mySensor(Port.S2)
-# sensor_right = mySensor(Port.S4)
+
+class mySensor(EV3Brick):
+    _ev3dev_driver_name = "ev3-analog-01"
+    def readvalue(self):
+        #self._mode('ANALOG')
+        return self._value(0)
+
+#sens1 = LegoPort(address = 'ev3-ports:in4')
+#sens1.mode = 'ev3-analog'
+utime.sleep(0.5)
+light_sensor = mySensor(Port.S2)
+
+color_sensor = ColorSensor(Port.S1)
 
 
 '''
@@ -91,7 +92,7 @@ ev3.speaker.beep()
 
 while True:
     # ......read in joystick controls
-    joy_x_in = -100#float(Get_SL('angleX')) #left right [-90,90]
+    joy_x_in = 0#float(Get_SL('angleX')) #left right [-90,90]
     joy_y_in = 0#float(Get_SL('angleY')) #forward back [-100,100]
     
     #.......print out joystick controls
@@ -99,11 +100,16 @@ while True:
     print('y:'+str(joy_y_in))
 
     #.....drive car
-    car_wheel.run(joy_y_in)
+    big_car.run(joy_y_in)
     baby_car.run(joy_x_in)
 
     #.....read sensor
+    colorData = color_sensor.color()
+    lightData = light_sensor.readvalue()
+
     #.....send sensor data
+    print('light: '+str(lightData))
+    print('here')
 
 
 
