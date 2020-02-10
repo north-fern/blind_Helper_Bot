@@ -7,7 +7,7 @@ from pybricks.tools import wait, StopWatch
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import AnalogSensor, UARTDevice
-
+import utime
 # Write your program here
 ev3 = EV3Brick()
 ev3.speaker.beep()
@@ -22,7 +22,7 @@ sense.voltage()
 uart = UARTDevice(Port.S4, 9600, timeout = 2000)
 
 def UARTtest():
-     uart.write("TEST")
+     uart.write("PLEASE PLEASE WORK.")
      wait(10)
      data = uart.read_all()
      ev3.screen.print(data)
@@ -38,18 +38,18 @@ baby_car = Motor(Port.A)
 
 # # Setup Sensors
 
-class mySensor(EV3Brick):
-    _ev3dev_driver_name = "ev3-analog-01"
-    def readvalue(self):
-        #self._mode('ANALOG')
-        return self._value(0)
+# class mySensor(EV3Brick):
+#     _ev3dev_driver_name = "ev3-analog-01"
+#     def readvalue(self):
+#         #self._mode('ANALOG')
+#         return self._value(0)
 
 #sens1 = LegoPort(address = 'ev3-ports:in4')
-#sens1.mode = 'ev3-analog'
-utime.sleep(0.5)
-light_sensor = mySensor(Port.S2)
+# #sens1.mode = 'ev3-analog'
+# utime.sleep(0.5)
+# light_sensor = mySensor(Port.S2)
 
-color_sensor = ColorSensor(Port.S1)
+# color_sensor = ColorSensor(Port.S1)
 
 
 '''
