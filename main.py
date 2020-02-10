@@ -10,6 +10,13 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 # Write your program here
 ev3 = EV3Brick()
 ev3.speaker.beep()
+rom pybricks.iodevices import AnalogSensor, UARTDevice
+# Write your program here
+ev3 = EV3Brick()
+ev3.speaker.beep()
+sense = AnalogSensor(Port.S1, False)
+sense.voltage()
+uart = UartDevice(Port.S1, 9600, timeout = 2000)
 
 
 '''
