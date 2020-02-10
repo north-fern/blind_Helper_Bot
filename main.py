@@ -25,7 +25,7 @@ def UARTtest():
      uart.write("PLEASE PLEASE WORK.")
      wait(10)
      data = uart.read_all()
-     ev3.screen.print(data)
+     ev3.screen.print(data.decode('utf-8'))
      
 
 '''
@@ -69,16 +69,16 @@ while True:
     print('y:'+str(joy_y_in))
 
     #.....drive car
-    big_car.run(joy_y_in)
-    baby_car.run(joy_x_in)
+  #  big_car.run(joy_y_in)
+   # baby_car.run(joy_x_in)
 
     #.....read sensor
-    colorData = color_sensor.color()
-    lightData = light_sensor.readvalue()
+   # colorData = color_sensor.color()
+   # lightData = light_sensor.readvalue()
 
     #.....send sensor data
-    print('light: '+str(lightData))
-    print('here')
+  #  print('light: '+str(lightData))
+   # print('here')
 
     UARTtest()
 
