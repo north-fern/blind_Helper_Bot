@@ -6,18 +6,21 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
-
+from pybricks.iodevices import AnalogSensor, UARTDevice
 # Write your program here
 ev3 = EV3Brick()
 ev3.speaker.beep()
-rom pybricks.iodevices import AnalogSensor, UARTDevice
 # Write your program here
-ev3 = EV3Brick()
-ev3.speaker.beep()
 sense = AnalogSensor(Port.S1, False)
 sense.voltage()
-uart = UartDevice(Port.S1, 9600, timeout = 2000)
+uart = UARTDevice(Port.S1, 9600, timeout = 2000)
 
+def UARTtest():
+     uart.write("TEST")
+     wait(10)
+     data = uart.read_all()
+     ev3.screen.print(data)
+     
 
 '''
 SYSTEMLINK SET-UP
