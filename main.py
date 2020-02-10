@@ -11,9 +11,9 @@ from pybricks.iodevices import AnalogSensor, UARTDevice
 ev3 = EV3Brick()
 ev3.speaker.beep()
 # Write your program here
-sense = AnalogSensor(Port.S1, False)
+sense = AnalogSensor(Port.S4, False)
 sense.voltage()
-uart = UARTDevice(Port.S1, 9600, timeout = 2000)
+uart = UARTDevice(Port.S4, 9600, timeout = 2000)
 
 def UARTtest():
      uart.write("TEST")
@@ -120,6 +120,8 @@ while True:
     #.....send sensor data
     print('light: '+str(lightData))
     print('here')
+
+    UARTtest()
 
 
 
