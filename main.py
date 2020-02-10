@@ -8,6 +8,7 @@ from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 from pybricks.iodevices import AnalogSensor, UARTDevice
 import utime
+
 # Write your program here
 ev3 = EV3Brick()
 ev3.speaker.beep()
@@ -15,17 +16,15 @@ ev3.speaker.beep()
 '''
 UART SET-UP
 '''
+# sense1 = AnalogSensor(Port.S4, False)
+# sense1.voltage()
+# uart = UARTDevice(Port.S4, 9600, timeout = 2000)
 
-# Write your program here
-sense = AnalogSensor(Port.S4, False)
-sense.voltage()
-uart = UARTDevice(Port.S4, 9600, timeout = 2000)
-
-def UARTtest():
-     uart.write("PLEASE PLEASE WORK.")
-     wait(10)
-     data = uart.read_all()
-     ev3.screen.print(data.decode('utf-8'))
+# def UARTtest():
+#      uart.write("PLEASE PLEASE WORK.")
+#      wait(10)
+#      data = uart.read_all()
+#      ev3.screen.print(data)
      
 
 '''
@@ -37,6 +36,9 @@ big_car = Motor(Port.D, Direction.COUNTERCLOCKWISE)
 baby_car = Motor(Port.A)
 
 # # Setup Sensors
+light_sensor = AnalogSensor(Port.S2, False)
+light_sensor.voltage()
+
 
 # class mySensor(EV3Brick):
 #     _ev3dev_driver_name = "ev3-analog-01"
@@ -69,18 +71,18 @@ while True:
     print('y:'+str(joy_y_in))
 
     #.....drive car
-  #  big_car.run(joy_y_in)
-   # baby_car.run(joy_x_in)
+    big_car.run(joy_y_in)
+    baby_car.run(joy_x_in)
 
     #.....read sensor
-   # colorData = color_sensor.color()
-   # lightData = light_sensor.readvalue()
+    #colorData = color_sensor.color()
+    lightData = light_sensor.voltage()
 
     #.....send sensor data
-  #  print('light: '+str(lightData))
-   # print('here')
+    print('light: '+str(lightData))
+    print('here')
 
-    UARTtest()
+    #UARTtest()
 
 
 
