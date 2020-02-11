@@ -18,7 +18,7 @@ UART SET-UP
 '''
 sense1 = AnalogSensor(Port.S4, False)
 sense1.voltage()
-uart = UARTDevice(Port.S4, 9600, timeout = 6000)
+uart = UARTDevice(Port.S4, 9600, timeout = 2000)
 
 def UARTtest():
      uart.write("PLEASE PLEASE WORK.")
@@ -40,38 +40,52 @@ light_sensor = AnalogSensor(Port.S1, False)
 light_sensor.voltage()
 
 def parseAngle():
-    data = uart.read(12)
-    wait(10)
-    data = data.decode('utf-8')
-    angle1 = int(data[1,5])
-    angle2 = int(data[7,11])
+    uart.clear()
+    angle1 = 0
+    angle2 = 0
+    try:
+        data = uart.read(13)
+        wait(10)
+        data = data.decode('utf-8')
+        print("data type: ", type(data))
+        print("data: ", data)
+        angle1 = int(data[1:6])
+        angle2 = int(data[7:12])
+    except:
+        print("FAILED READ FROM CONTROLLER")
     return angle1, angle2
 
 def big_car_drive(angle):
-    if angle < -10:
-        big_car.run(angle - 10)
-    elif angle > 10:
-        big_car.run(angle + 10)
+    b = 40
+    a = 15
+    minAngle = 15
+    maxAngle = 90
+    speed = ((b-a)*(abs(angle) - minAngle)/(maxAngle-minAngle))+ a
+    if angle < -minAngle:
+        speed = -speed
+    if angle > -minAngle and angle < minAngle:
+        speed = 0
+    big_car.run(speed)
     wait(10)
 
 
 def baby_car_drive(angle):
-    b = 50
+    b = 40
     a = 15
-    minAngle = 10
+    minAngle = 15
     maxAngle = 90
     speed = ((b-a)*(abs(angle) - minAngle)/(maxAngle-minAngle))+ a
-    if angle < -10:
+    if angle < -minAngle:
         speed = -speed
-    if angle > -10 and angle < 10:
+    if angle > -minAngle and angle < minAngle:
         speed = 0
     baby_car.run(speed)
     wait(10)
 
 def lineDetect(lightdata, whiteLight):
-    thresh = 200
+    thresh = 300
     diff = whiteLight - lightdata
-    if abs(diff) > 200:
+    if abs(diff) > thresh:
         return 1
     else:
         return 0
@@ -90,14 +104,15 @@ for i in range(100):
     lightData = light_sensor.voltage() + lightData
     counter = counter + 1
 whiteLight = lightData/counter
-ev3.speaker.set_volume(150)
+ev3.speaker.set_volume(100)
 ev3.speaker.say("Calibrating Done")
 while True:
     # ......read in joystick controls
-    #angle1, angle2 = parseAngle()
-    angle1, angle2 = 0,0
+    angle1, angle2 = parseAngle()
+    #angle1, angle2 = 0,0
+
     #print joystick controlls
-    print(angle1, ", ", angle2)
+    print("ANGLES: ", angle1, ", ", angle2)
     
     #.....drive car
     baby_car_drive(angle1)
@@ -105,12 +120,16 @@ while True:
     
     #.....read sensor
     lightData = light_sensor.voltage()
-    wait(100)
+    wait(10)
     #.....send sensor data
     print('light: ' + str(lightData))
     #print('here')
+    
     isLine = lineDetect(lightData, whiteLight)
+#    if isLine == 1:
+    #    ev3.speaker.say("SWIM!")
     uart.write(str(isLine))
+    print('isLine: ' + str(isLine))
     wait(10)
 
     
