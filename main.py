@@ -18,7 +18,7 @@ UART SET-UP
 '''
 sense1 = AnalogSensor(Port.S4, False)
 sense1.voltage()
-uart = UARTDevice(Port.S4, 9600, timeout = 2000)
+uart = UARTDevice(Port.S4, 9600, timeout = 6000)
 
 def UARTtest():
      uart.write("PLEASE PLEASE WORK.")
