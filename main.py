@@ -39,69 +39,79 @@ baby_car = Motor(Port.A)
 light_sensor = AnalogSensor(Port.S1, False)
 light_sensor.voltage()
 
-
-# class mySensor(EV3Brick):
-#     _ev3dev_driver_name = "ev3-analog-01"
-#     def readvalue(self):
-#         #self._mode('ANALOG')
-#         return self._value(0)
-
-#sens1 = LegoPort(address = 'ev3-ports:in4')
-# #sens1.mode = 'ev3-analog'
-# utime.sleep(0.5)
-# light_sensor = mySensor(Port.S2)
-
-# color_sensor = ColorSensor(Port.S1)
 def parseAngle():
-    data = uart.read(11)
+    data = uart.read(12)
+    wait(10)
     data = data.decode('utf-8')
-    angle1 = int(data[1,4])
-    angle2 = int(data[6,9])
+    angle1 = int(data[1,5])
+    angle2 = int(data[7,11])
     return angle1, angle2
+
+def big_car_drive(angle):
+    if angle < -10:
+        big_car.run(angle - 10)
+    elif angle > 10:
+        big_car.run(angle + 10)
+    wait(10)
+
+
+def baby_car_drive(angle):
+    b = 50
+    a = 15
+    minAngle = 10
+    maxAngle = 90
+    speed = ((b-a)*(abs(angle) - minAngle)/(maxAngle-minAngle))+ a
+    if angle < -10:
+        speed = -speed
+    if angle > -10 and angle < 10:
+        speed = 0
+    baby_car.run(speed)
+    wait(10)
+
+def lineDetect(lightdata, whiteLight):
+    thresh = 200
+    diff = whiteLight - lightdata
+    if abs(diff) > 200:
+        return 1
+    else:
+        return 0
+    
 
 '''
 PROGRAM HERE
 '''
 # Start code
-ev3.speaker.beep()
 
+#calibrate light sensor
+wait(1000)
+lightData = 0
+counter = 0
+for i in range(100):
+    lightData = light_sensor.voltage() + lightData
+    counter = counter + 1
+whiteLight = lightData/counter
 
+ev3.speaker.voice("Calibrating Done")
 while True:
     # ......read in joystick controls
-    #joy_x_in,joy_y_in = parseAngle()
-
-    #.......print out joystick controls
-   #print('x:'+str(joy_x_in))
-    #print('y:'+str(joy_y_in))
-
+    #angle1, angle2 = parseAngle()
+    angle1, angle2 = 0,0
+    #print joystick controlls
+    print(angle1, ", ", angle2)
+    
     #.....drive car
-    ##calibrate and scale angles 
-        ## if mostly upright, don't move.
-        # FOR Y 
-        ##-90-10 and 10-90 degrees
-        ## -100-20, 20-100 speed
-
-        # FOR X 
-        ## max speed +/- 50, min speed +/- 15
-        ## -90-10 and 10-90 degrees
-    #big_car.run(joy_y_in)
-    baby_car.run(15)
-        #motor stall??????
-
+    baby_car_drive(angle1)
+    big_car_drive(angle2)
+    
     #.....read sensor
-    #colorData = color_sensor.color()
     lightData = light_sensor.voltage()
     wait(100)
     #.....send sensor data
-    #print('light: '+str(lightData))
+    print('light: ' + str(lightData))
     #print('here')
-
-    #UARTtest()
-    #uart.write(str(lightData) + ' ')
-    #wait(100)
-   #data = uart.read()
-    #print(data.decode('utf-8'))
-    #print(type(data.decode('utf-8')))
+    isLine = lineDetect(lightData, whiteLight)
+    uart.write(str(isLine))
+    wait(10)
 
     
     
