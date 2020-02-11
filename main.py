@@ -90,8 +90,8 @@ for i in range(100):
     lightData = light_sensor.voltage() + lightData
     counter = counter + 1
 whiteLight = lightData/counter
-
-ev3.speaker.voice("Calibrating Done")
+ev3.speaker.set_volume(150)
+ev3.speaker.say("Calibrating Done")
 while True:
     # ......read in joystick controls
     #angle1, angle2 = parseAngle()
