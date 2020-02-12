@@ -20,10 +20,10 @@ def UARTtest():
     '''
     a test function for debugging UART
     '''
-     uart.write("PLEASE PLEASE WORK.")
-     wait(10)
-     data = uart.read_all()
-     ev3.screen.print(data.decode('utf-8'))
+    uart.write("PLEASE PLEASE WORK.")
+    wait(10)
+    data = uart.read_all()
+    ev3.screen.print(data.decode('utf-8'))
      
 
 def parseAngle():
@@ -100,6 +100,7 @@ def lightCalibration():
         lightData = light_sensor.voltage() + lightData
         counter = counter + 1
     whiteLight = lightData/counter
+    return whiteLight
 '''
 PROGRAM HERE
 '''
@@ -124,7 +125,7 @@ light_sensor = AnalogSensor(Port.S1, False)
 light_sensor.voltage()
 
 #calibrate light sensor
-lightCalibration()
+whiteLight = lightCalibration()
 ev3.speaker.set_volume(100)
 ev3.speaker.say("Calibration Complete")
 
@@ -141,10 +142,10 @@ while True:
     
     #.....read sensor
     lightData = light_sensor.voltage()
-    wait(10)
+    #wait(10)
     #.....send sensor data
     print('light: ' + str(lightData))
     isLine = lineDetect(lightData, whiteLight)
     uart.write(str(isLine))
     print('isLine: ' + str(isLine))
-    wait(10)
+    #wait(10)
