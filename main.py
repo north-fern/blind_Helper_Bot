@@ -75,14 +75,14 @@ def baby_car_drive(angle):
         speed = -speed
     if angle > -minAngle and angle < minAngle:
         speed = 0
-    baby_car.run(speed)
+    baby_car.run(-speed)
     wait(10)
 
 def lineDetect(lightdata, whiteLight):
     '''
     detects the line and either returns 1 or 0
     '''
-    thresh = 300
+    thresh = 250
     diff = whiteLight - lightdata
     if abs(diff) > thresh:
         return 1
